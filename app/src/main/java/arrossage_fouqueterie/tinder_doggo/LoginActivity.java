@@ -114,7 +114,9 @@ public class LoginActivity extends BaseActivity  {
             startActivity(homepage);
         }
         else{
-
+            finish();
+            Intent homepage = new Intent(this, LoginActivity.class);
+            startActivity(homepage);
         }
     }
     private void createAccount(String email, String password)throws FirebaseAuthException{
@@ -241,7 +243,7 @@ public class LoginActivity extends BaseActivity  {
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            mAuthTask.doInBackground((Void) null);
         }
     }
 
