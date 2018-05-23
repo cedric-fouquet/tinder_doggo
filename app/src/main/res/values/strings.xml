@@ -14,4 +14,11 @@
         completions."
     </string>
     <string name="action_register">register</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="create_account_not_found">Account could not be found do you want to create a new one ?</string>
+    <string name="age">Age</string>
+    <string name="name">Name</string>
+    <string name="race">Race</string>
 </resources>

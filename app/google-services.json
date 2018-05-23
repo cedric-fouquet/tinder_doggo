@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "146494566710-3ha0o3l54dfo2gfit245u14ul7965srg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "arrossage_fouqueterie.tinder_doggo",
+            "certificate_hash": "5517d653481785d3714ec53bd9e6d350789661c6"
+          }
+        },
+        {
           "client_id": "146494566710-aef6bpko0bj974v4cci0d0g67fv00rep.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -3,6 +3,8 @@ package arrossage_fouqueterie.tinder_doggo;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -106,11 +108,16 @@ public class LoginActivity extends BaseActivity  {
 
 
 
-
-    protected void updateUI(FirebaseUser user){
+    protected void updateUI(FirebaseUser user, boolean isNewUser){
         if(user != null){
             finish();
-            Intent homepage = new Intent(LoginActivity.this, MainMenu.class);
+            Intent homepage;
+            if(isNewUser){
+                 homepage = new Intent(LoginActivity.this, Inscription.class);
+            }
+            else{
+                homepage = new Intent(LoginActivity.this, MainMenu.class);
+            }
             startActivity(homepage);
         }
         else{
@@ -120,77 +127,62 @@ public class LoginActivity extends BaseActivity  {
         }
     }
     private void createAccount(String email, String password)throws FirebaseAuthException{
-        mAuth.createUserWithEmailAndPassword(email, password).addOnFailureListener(this, new OnFailureListener() {
+        Task<AuthResult> creatAccountTask = mAuth.createUserWithEmailAndPassword(email, password);
+        creatAccountTask.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(LoginActivity.this, "Authentication failed.",
-                        Toast.LENGTH_SHORT).show();
-                updateUI(null);
-            }
-        }).addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                FirebaseUser user = mAuth.getCurrentUser();
-                updateUI(user);
-            }
-        });
-    }
-    private void signIn(final String email, final String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d(TAG, "signInWithEmail:success");
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            updateUI(user);
-//                        } else {
-//                            try{
-//                                throw  task.getException();
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                            // If sign in fails, display a message to the user.
-//                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-//
-//                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
-//                        }
-//
-//
-//                    }
-//                })
- .addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                Log.d(TAG, "signInWithEmail:success");
-                FirebaseUser user = mAuth.getCurrentUser();
-                updateUI(user);
-
-            }
-        })
-.addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if(e instanceof FirebaseAuthInvalidUserException)
-                {
-                    Log.d(TAG, "signInWithEmail:FirebaseAuthInvalidUserException");
-                    Log.d(TAG, e.getMessage());
-                    Log.d(TAG, e.getLocalizedMessage());
-                    try {
-                        createAccount(email,password);
-                    } catch (FirebaseAuthException e1) {
-                        e1.printStackTrace();
-                    }
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    updateUI(user,true);
                 }
                 else{
-                    Log.d(TAG, "signInWithEmail:failure");
+                    Toast.makeText(LoginActivity.this, "Account creation failed.",
+                            Toast.LENGTH_SHORT).show();
+                    updateUI(null);
+                }
+            }
+        });
+
+    }
+    private void signIn(final String email, final String password) {
+        Task<AuthResult> authResultTask = mAuth.signInWithEmailAndPassword(email, password);
+
+        authResultTask.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "signInWithEmail:success");
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    updateUI(user,false);
+                } else {
+                    Log.d(TAG, "signInWithEmail:FirebaseAuthInvalidUserException");
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setMessage(R.string.create_account_not_found);
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            try {
+                                createAccount(email,password);
+                            } catch (FirebaseAuthException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    });
+                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+
+
+                    AlertDialog createAccountDialog = builder.create();
+                    createAccountDialog.show();
                 }
 
             }
         });
+
+
 
     }
 
@@ -249,7 +241,12 @@ public class LoginActivity extends BaseActivity  {
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        if(email.contains("@") && email.contains(".")){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     private boolean isPasswordValid(String password) {
