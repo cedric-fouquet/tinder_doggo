@@ -59,6 +59,7 @@ public class LoginActivity extends BaseActivity  {
     /**
      * Id to identity READ_CONTACTS permission request.
      */
+
     private static final String TAG = "Login";
     private static final int REQUEST_READ_CONTACTS = 0;
     private FirebaseAuth mAuth;

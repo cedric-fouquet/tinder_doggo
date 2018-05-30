@@ -1,5 +1,6 @@
 package arrossage_fouqueterie.tinder_doggo;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -21,14 +22,13 @@ public class Inscription extends BaseActivity {
     private EditText mRaceView;
     private EditText mAgeView;
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inscription);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mNameView = findViewById(R.id.editTextName);
 
@@ -44,19 +44,22 @@ public class Inscription extends BaseActivity {
         Button sendInfo = findViewById(R.id.validateInfo);
         sendInfo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                writeNewUser(mAuth.getUid(),mNameView.getText().toString(),mAuth.get);
+                writeNewUser(mAuth.getUid(),mNameView.getText().toString(),mRaceView.getText().toString()
+                        ,Integer.parseInt(mAgeView.getText().toString()));
             }
         });
 
 
     }
     private void updateInformation(){
-        DatabaseReference myRef = database.getReference("userId");
+        DatabaseReference myRef = mDatabase.getReference("userId");
 
         myRef.setValue(mAuth.getCurrentUser().getUid());
     }
-    private void writeNewUser(String userId, String username, String email, String race, int age) {
-        User user = new User(username,email,race, age);
-        database.getReference().child(userId).setValue(user);
+    private void writeNewUser(String userId, String username, String race, int age) {
+        User user = new User(username,race, age);
+        mDatabase.getReference().child(userId).setValue(user);
+        Intent page =  new Intent(Inscription.this,MainMenu.class);
+        startActivity(page);
     }
 }
