@@ -21,4 +21,8 @@
     <string name="age">Age</string>
     <string name="name">Name</string>
     <string name="race">Race</string>
+    <string name="choose_img">Choose an image</string>
+    <string name="user_name">Your name</string>
+    <string name="get_new_doggo">Show me the locals doggos</string>
+    <string name="last_doggos">Matched Doggos</string>
 </resources>
