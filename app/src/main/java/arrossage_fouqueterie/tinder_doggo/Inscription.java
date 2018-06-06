@@ -135,7 +135,7 @@ public class Inscription extends BaseActivity {
                 }
             });
 
-        mDatabase.getReference().child(userId).setValue(user);
+        mDatabase.getReference().child("user").child(userId).setValue(user);
         Intent page =  new Intent(Inscription.this,MainMenu.class);
         startActivity(page);
     }

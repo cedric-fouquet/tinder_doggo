@@ -80,7 +80,10 @@ public class LoginActivity extends BaseActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
-
+        if(null != mAuth.getCurrentUser()) {
+            Intent homepage = new Intent(this, MainMenu.class);
+            startActivity(homepage);
+        }
 
 
         super.onCreate(savedInstanceState);
