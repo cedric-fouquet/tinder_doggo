@@ -15,6 +15,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class DoggoMatcher extends BaseActivity {
@@ -23,9 +24,12 @@ public class DoggoMatcher extends BaseActivity {
     private static final String TAG = "DoggoMatcher";
     private FirebaseDatabase mDatabase;
 
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doggo_matcher);
@@ -47,6 +51,8 @@ public class DoggoMatcher extends BaseActivity {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
+
+                            mDatabase.getReference().child("positions").child(mAuth.getUid()).setValue(location);
                             Log.d(TAG, location.toString());
                         }
                     }
@@ -57,5 +63,8 @@ public class DoggoMatcher extends BaseActivity {
                 Log.d(TAG, "onfailure: ");
             }
         });
+    }
+    protected void fetchDataBaseForLocalDoggos(){
+
     }
 }

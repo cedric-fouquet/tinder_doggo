@@ -84,7 +84,7 @@ public class Inscription extends BaseActivity {
 
 
                 writeNewUser(mAuth.getUid(),mNameView.getText().toString(),mRaceView.getText().toString()
-                        ,Integer.parseInt(mAgeView.getText().toString()));
+                        ,Integer.parseInt(mAgeView.getText().toString()),((BitmapDrawable)imageButton.getDrawable()).getBitmap());
             }
         });
 
@@ -113,10 +113,10 @@ public class Inscription extends BaseActivity {
         }
     }
 
-    private void writeNewUser(String userId, String username, String race, int age) {
+    private void writeNewUser(String userId, String username, String race, int age, Bitmap profilImage) {
 
 
-        User user = new User(username,race, age);
+        DoggoProfile user = new DoggoProfile(mAuth.getUid(),username,race,age,profilImage);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         profilImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);

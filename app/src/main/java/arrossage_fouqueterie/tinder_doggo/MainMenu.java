@@ -27,12 +27,10 @@ import java.io.Console;
 import java.io.File;
 
 public class MainMenu extends BaseActivity {
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     private static final String TAG = "MainMenu";
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private StorageReference storageRef ;
-    private Bitmap profileImage;
+
+
 
 
     private ImageView profileImageView;
@@ -40,12 +38,12 @@ public class MainMenu extends BaseActivity {
 
     private Button getNewDoggosButton;
     private Button matchedDoggosButton;
+    private DoggoProfile doggoUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         getApplicationContext();
-        storageRef = FirebaseStorage.getInstance().getReference();
         setContentView(R.layout.activity_main_menu);
 
         profileImageView = findViewById(R.id.imageViewprofile);
@@ -59,54 +57,20 @@ public class MainMenu extends BaseActivity {
         matchedDoggosButton.setVisibility(View.GONE);
         getNewDoggosButton.setVisibility(View.GONE);
         super.onCreate(savedInstanceState);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        doggoUser = new DoggoProfile(mAuth.getUid());
+        doggoUser.loadProfile();
+        if(doggoUser.isAvailableprofile())
+        {
+            userNameView.setText(doggoUser.getUsername());
+            profileImageView.setImageBitmap(doggoUser.getProfilePicture());
 
-        DatabaseReference myRef = database.getReference().child("user").child(mAuth.getUid());
-        myRef.addValueEventListener(new ValueEventListener(){
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Log.v(TAG,dataSnapshot.toString());
-                    userNameView.setText(dataSnapshot.child("username").getValue().toString());
-                    userNameView.setVisibility(View.VISIBLE);
-                    matchedDoggosButton.setVisibility(View.VISIBLE);
-                    getNewDoggosButton.setVisibility(View.VISIBLE);
+            userNameView.setVisibility(View.VISIBLE);
+            profileImageView.setVisibility(View.VISIBLE);
+            matchedDoggosButton.setVisibility(View.VISIBLE);
+            getNewDoggosButton.setVisibility(View.VISIBLE);
+        }
 
-                } else {
-                    Intent page = new Intent(MainMenu.this,Inscription.class);
-                    startActivity(page);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-
-            }
-
-        });
-
-        StorageReference pathReference = storageRef.child(mAuth.getUid()+".jpg");
-        final long ONE_MEGABYTE = 1024 * 1024 * 10;
-        pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                profileImage =  BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                profileImageView.setImageBitmap(profileImage);
-
-
-                profileImageView.setVisibility(View.VISIBLE);
-
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure( Exception exception) {
-                userNameView.setText("Error");
-                userNameView.setVisibility(View.VISIBLE);
-            }
-        });
 
 
         matchedDoggosButton.setOnClickListener(new View.OnClickListener() {
