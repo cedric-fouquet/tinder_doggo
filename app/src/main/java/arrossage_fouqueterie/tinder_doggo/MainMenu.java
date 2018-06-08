@@ -30,8 +30,9 @@ public class MainMenu extends BaseActivity {
 
     private static final String TAG = "MainMenu";
 
-
-
+    private FirebaseAuth mAuth =  FirebaseAuth.getInstance();
+    private FirebaseDatabase database =FirebaseDatabase.getInstance();
+    private StorageReference storageRef =FirebaseStorage.getInstance().getReference();
 
     private ImageView profileImageView;
     private TextView userNameView;
@@ -56,23 +57,65 @@ public class MainMenu extends BaseActivity {
         profileImageView.setVisibility(View.GONE);
         matchedDoggosButton.setVisibility(View.GONE);
         getNewDoggosButton.setVisibility(View.GONE);
+
+
         super.onCreate(savedInstanceState);
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+
         doggoUser = new DoggoProfile(mAuth.getUid());
-        doggoUser.loadProfile();
-        if(doggoUser.isAvailableprofile())
-        {
-            userNameView.setText(doggoUser.getUsername());
-            profileImageView.setImageBitmap(doggoUser.getProfilePicture());
 
-            userNameView.setVisibility(View.VISIBLE);
-            profileImageView.setVisibility(View.VISIBLE);
-            matchedDoggosButton.setVisibility(View.VISIBLE);
-            getNewDoggosButton.setVisibility(View.VISIBLE);
-        }
+        //Get values from db
+        DatabaseReference myRef = database.getReference().child("user").child(mAuth.getUid());
+        myRef.addValueEventListener(new ValueEventListener(){
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    Log.d(TAG, dataSnapshot.toString());
+                    doggoUser.loadProfileInfo(dataSnapshot);
+
+                    userNameView.setText(doggoUser.getUsername());
+                    profileImageView.setImageBitmap(doggoUser.getProfilePicture());
 
 
 
+                } else {
+                    Log.w(TAG, "loadPost:noData");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+
+            }
+
+        });
+
+        //GetImage from stockage
+        StorageReference image = storageRef.child(mAuth.getUid()+".jpg");
+
+        final long ONE_MEGABYTE = 1024 * 1024 * 100;
+
+        image.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                doggoUser.loadImage(bytes);
+                userNameView.setVisibility(View.VISIBLE);
+                profileImageView.setVisibility(View.VISIBLE);
+                matchedDoggosButton.setVisibility(View.VISIBLE);
+                getNewDoggosButton.setVisibility(View.VISIBLE);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure( Exception exception) {
+                // Handle any errors
+            }
+        });
+        //Buttons Listeners
         matchedDoggosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
