@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "146494566710-qlt50kaprtdcanop43uodm17qn82dffm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "arrossage_fouqueterie.tinder_doggo",
+            "certificate_hash": "eb353c36fb0c1124baee9db36c6602780d5b3e30"
+          }
+        },
+        {
           "client_id": "146494566710-3ha0o3l54dfo2gfit245u14ul7965srg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -29,6 +37,10 @@
             "package_name": "arrossage_fouqueterie.tinder_doggo",
             "certificate_hash": "86f6f2e80ce51ce48ea4682aa85d895db5cfd875"
           }
+        },
+        {
+          "client_id": "146494566710-3t9k9cnjhkgiqi6vdj313356i5niqm23.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
           "client_id": "146494566710-3t9k9cnjhkgiqi6vdj313356i5niqm23.apps.googleusercontent.com",
