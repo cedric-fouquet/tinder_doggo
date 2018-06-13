@@ -1,21 +1,12 @@
 package arrossage_fouqueterie.tinder_doggo;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-import android.view.View;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by f16007622 on 08/06/18.
@@ -28,6 +19,7 @@ public class DoggoProfile {
     private String race;
     private Bitmap profilePicture;
     private String profileId;
+    private ArrayList<String> matchedIdList = new ArrayList<>();
 
     private boolean availableprofile;
     private static final String TAG = "DoggoProfile";
@@ -36,12 +28,11 @@ public class DoggoProfile {
         this.profileId = id;
         availableprofile =false;
     }
-    public DoggoProfile(String id,String username, String race, int age,Bitmap profilePicture)
+    public DoggoProfile(String id,String username, String race, int age)
     {
         availableprofile =true;
         this.age = age;
         this.race = race;
-        this.profilePicture = profilePicture;
 
         this.username = username;
         this.profileId = id;
@@ -83,5 +74,16 @@ public class DoggoProfile {
 
     public boolean isAvailableprofile() {
         return availableprofile;
+    }
+
+    public List<String> getMatchedIdList() {
+        return matchedIdList;
+    }
+    public void addMatchedIdToList(String id)
+    {
+        this.matchedIdList.add(id);
+    }
+    public void setMatchedIdList(ArrayList<String> matchedIdList) {
+        this.matchedIdList = matchedIdList;
     }
 }

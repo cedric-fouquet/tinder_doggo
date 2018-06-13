@@ -119,6 +119,8 @@ public class MainMenu extends BaseActivity {
         matchedDoggosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent homepage = new Intent(MainMenu.this, MatchedDoggosList.class);
+                startActivity(homepage);
             }
         });
         getNewDoggosButton.setOnClickListener(new View.OnClickListener() {
