@@ -2,6 +2,7 @@ package arrossage_fouqueterie.tinder_doggo;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 
 import com.google.firebase.database.DataSnapshot;
 
@@ -72,18 +73,27 @@ public class DoggoProfile {
         return profileId;
     }
 
-    public boolean isAvailableprofile() {
-        return availableprofile;
-    }
+
 
     public List<String> getMatchedIdList() {
         return matchedIdList;
     }
-    public void addMatchedIdToList(String id)
-    {
-        this.matchedIdList.add(id);
-    }
+
     public void setMatchedIdList(ArrayList<String> matchedIdList) {
         this.matchedIdList = matchedIdList;
+    }
+    private class UpdateProfile extends AsyncTask<Void,Void,Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+                return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
     }
 }
