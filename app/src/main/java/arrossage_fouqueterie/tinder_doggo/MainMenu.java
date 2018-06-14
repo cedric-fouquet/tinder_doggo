@@ -109,11 +109,6 @@ public class MainMenu extends BaseActivity {
                 getNewDoggosButton.setVisibility(View.VISIBLE);
 
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure( Exception exception) {
-                // Handle any errors
-            }
         });
         //Buttons Listeners
         matchedDoggosButton.setOnClickListener(new View.OnClickListener() {
